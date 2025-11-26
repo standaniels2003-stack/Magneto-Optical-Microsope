@@ -1,19 +1,15 @@
 # TODO List - FELIX Stage
 
 ## Papers / Reading
-- [ ] Summarize Kirilyuk 2010 review paper
-- [ ] Summarize "Ultrafast phononic switching of magnetization" 2021
+- [ ] Summarize Kirilyuk 2010 Ultrafast optical manipulation of magnetic order
+- [x] Summarize Gidding 2023 Dynamic self-organisation and pattern formation by magnon-polarons
+- [x] Summarize Kwaaitaal 2024 Epsilon-near-zero regime enables permanent ultrafast all-optical reversal of ferroelectric polarization
+- [ ] Summarize Davies 2024 Phononic switching of magnetization by the ultrafast Barnett effect
 - [ ] Collect BibTeX entries for all read papers
 
 ## Experiments
-- [ ] Review MO microscope basics
-- [ ] Familiarize with lab setup & equipment
-- [ ] Take initial test measurements
 
 ## Simulations / Code
-- [ ] Set up Python environment for data analysis
-- [ ] Test simple simulation model
-- [ ] Document code structure in repo
 
 ## Meetings / Planning
 - [ ] Prepare for meeting with Andrei (18 Dec)
