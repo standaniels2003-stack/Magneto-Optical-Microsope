@@ -16,7 +16,10 @@
 - [ ] Document code structure in repo
 
 ## Meetings / Planning
-- [ ] Prepare questions for Andrei (18 Dec)
+- [ ] Prepare for meeting with Andrei (18 Dec)
 
 ## Other
 - [x] Set the repository up
+- [ ] Expand main README.md with proper explanations for each main folder
+- [ ] Expand main README.md with how to run the code files(after some code files are made)
+- [ ] Expand main REAMDE.md with proper explanation and describtion of the project(after meeting with andrei)
