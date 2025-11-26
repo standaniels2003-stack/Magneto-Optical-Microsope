@@ -17,3 +17,6 @@
 
 ## Meetings / Planning
 - [ ] Prepare questions for Andrei (18 Dec)
+
+## Other
+- [x] Set the repository up
