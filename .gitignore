@@ -1,0 +1,61 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.pickle
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# -----------------------------
+# LaTeX
+# -----------------------------
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.xdv
+*.run.xml
+# *.pdf  # OPTIONAL: Uncomment if you don't want compiled PDFs in repo
+
+# Temporary files
+*~
+*.backup
+*.tmp
+*.swp
+*.swo
+
+# -----------------------------
+# VSCode
+# -----------------------------
+.vscode/
+
+# -----------------------------
+# macOS
+# -----------------------------
+.DS_Store
+
+# -----------------------------
+# Linux
+# -----------------------------
+.Trash-*

@@ -1,6 +1,10 @@
 # Magneto-Optical-Microsope
-This is the Repository for my internship at FELIX
-# Repository Structure:
+
+This repository contains all code, data structures, LaTeX summaries, notes and experimental logs for my internship at the FELIX Laboratory (Radboud University).  
+The project focuses on magneto-optical microscopy and related experimental and theoretical work.
+
+## Repository Structure:
+
 ```bash
 Magneto-Optical-Microsope/
 │
@@ -36,3 +40,18 @@ Magneto-Optical-Microsope/
 ├── .gitignore # gitignore (venv, LateX)
 └── README.md # General explanation about the repository and project
 ```
+
+## Purpose of This Project
+
+The goal of this internship is to develop experimental and analytical techniques for magneto-optical microscopy.  
+This includes:
+
+## Setup Virtual Environment
+
+1. Create virtual environment:
+   python -m venv venv
+2. Activate it:
+   source venv/bin/activate  # macOS/Linux
+   venv\Scripts\activate     # Windows
+3. Install dependencies:
+   pip install -r Code/requirements.txt

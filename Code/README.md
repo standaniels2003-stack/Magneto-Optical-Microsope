@@ -4,10 +4,16 @@ This folder contains all scripts, notebooks, and simulations for the FELIX inter
 
 ## Setup Virtual Environment
 
-1. Create virtual environment:
+1. **Create virtual environment:**
+   ```bash
    python -m venv venv
-2. Activate it:
+   ```
+2. **Activate it:**
+   ```bash
    source venv/bin/activate  # macOS/Linux
    venv\Scripts\activate     # Windows
-3. Install dependencies:
+   ```
+3. **Install dependencies:**
+   ```bash
    pip install -r Code/requirements.txt
+   ```
