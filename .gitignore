@@ -37,6 +37,7 @@ venv/
 *.xdv
 *.run.xml
 # *.pdf  # OPTIONAL: Uncomment if you don't want compiled PDFs in repo
+papers_summariesNotes.bib
 
 # Temporary files
 *~
