@@ -6,7 +6,7 @@
 - [x] Summarize Kwaaitaal 2024 Epsilon-near-zero regime enables permanent ultrafast all-optical reversal of ferroelectric polarization
 - [x] Summarize Davies 2024 Phononic switching of magnetization by the ultrafast Barnett effect
 - [x] Summarize Stupakiewicz 2021 Ultrafast phononic switching of magnetization
-- [ ] Summarize Beaurepaire 1996 Ultrafast Spin Dynamics in Ferromagnetic Nickel
+- [x] Summarize Beaurepaire 1996 Ultrafast Spin Dynamics in Ferromagnetic Nickel
 - [ ] Summarize Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors
 - [ ] Summarize Bigot 2009 Coherent ultrafast magnetism induced by femtosecond laser pulses
 - [ ] Summarize Forst 2011 Nonlinear phononics as an ultrafast route to lattice control
@@ -30,7 +30,10 @@
 - [ ] Collect BibTeX entries for all read papers
 - [ ] Check whether all BibTeX entries are correct
 - [ ] Read upon what the kerr effect is
+
 ## Experiments
+- [ ] Learn the typical experimental setups at FELIX
+- [ ] Learn the methods used in a experiment at FELIX
 
 ## Simulations / Code
 
