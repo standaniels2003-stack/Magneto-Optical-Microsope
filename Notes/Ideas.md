@@ -14,9 +14,28 @@ I would like it to be kinda structured like this:
 Pipeline:
 ```mermaid
 flowchart TD
-    A[Raw Images] --> B[Preprocessing\n• Resize / Crop\n• Normalize\n• Noise Removal\n• Background Subtraction\n• Optional Augmentation]
-    B --> C[CNN Processing\n• Input: Grayscale Images\n• Output: Segmentation Mask\n  - Up / Down Domains\n  - Domain Walls\n• Optional Outputs\n  - Switching Probability\n  - Magnetization\n  - Domain Size Statistics]
-    C --> D[Postprocessing\n• Calculate Metrics\n  - Avg Domain Size\n  - Domain Wall Density\n  - Total Magnetization\n• Save JSON & Annotated Images]
-    D --> E[Quality Control\n• Flag Low-Quality Images\n• Save for Review / Discard]
-    E --> F[Final Outputs\n• Segmentation Masks\n• JSON Metrics\n• Annotated Images]
+    subgraph A [Preprocessing]
+        A1[• Resize / Crop<br>• Normalize<br>• Noise Removal<br>• Background Subtraction<br>• Optional Augmentation]
+    end
+
+    subgraph B [CNN Processing]
+        B1[• Input: Grayscale Images<br>• Output: Segmentation Mask<br>  - Up / Down Domains<br>  - Domain Walls<br>• Optional Outputs<br>  - Switching Probability<br>  - Magnetization<br>  - Domain Size Statistics]
+    end
+
+    subgraph C [Postprocessing]
+        C1[• Calculate Metrics<br>  - Avg Domain Size<br>  - Domain Wall Density<br>  - Total Magnetization<br>• Save JSON & Annotated Images]
+    end
+
+    subgraph D [Quality Control]
+        D1[• Flag Low-Quality Images<br>• Save for Review / Discard]
+    end
+
+    subgraph E [Final Outputs]
+        E1[• Segmentation Masks<br>• JSON Metrics<br>• Annotated Images]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
 ```
