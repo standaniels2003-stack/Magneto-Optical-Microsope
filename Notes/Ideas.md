@@ -15,17 +15,13 @@ Pipeline:
 ```mermaid
 flowchart TD
     A[Raw Images] --> B[Preprocessing]
-    B --> C[CNN Processing]
-    C --> D[Postprocessing]
-    D --> E[Quality Control]
-    E --> F[Processed & Quality-Checked Outputs]
-
     B --> B1[Resize / Crop]
-    B --> B2[Normalize (0,1)]
+    B --> B2[Normalize]
     B --> B3[Noise Removal]
     B --> B4[Background Subtraction]
     B --> B5[Optional Augmentation]
 
+    B --> C[CNN Processing]
     C --> C1[Input: Grayscale Images]
     C --> C2[Output: Segmentation Mask]
     C2 --> C2a[Up Domains]
@@ -36,6 +32,7 @@ flowchart TD
     C3 --> C3b[Magnetization Direction]
     C3 --> C3c[Domain Size Statistics]
 
+    C --> D[Postprocessing]
     D --> D1[Calculate Metrics]
     D1 --> D1a[Average Domain Size]
     D1 --> D1b[Domain Wall Density]
@@ -43,9 +40,11 @@ flowchart TD
     D --> D2[Save JSON Output]
     D --> D3[Save Annotated Images]
 
+    D --> E[Quality Control]
     E --> E1[Flag Low-Quality Images]
     E --> E2[Separate Folder for Review]
 
+    E --> F[Processed & Quality-Checked Outputs]
     F --> F1[Segmentation Masks]
     F --> F2[JSON Metrics]
     F --> F3[Annotated Images]
