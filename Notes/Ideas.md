@@ -21,7 +21,7 @@ flowchart TD
     E --> F[Processed & Quality-Checked Outputs]
 
     B --> B1[Resize / Crop]
-    B --> B2[Normalize [0,1]]
+    B --> B2[Normalize (0,1)]
     B --> B3[Noise Removal]
     B --> B4[Background Subtraction]
     B --> B5[Optional Augmentation]
