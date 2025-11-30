@@ -36,6 +36,7 @@
 - [ ] Learn the methods used in a experiment at FELIX
 
 ## Simulations / Code
+- [ ] Make a small basic simulation
 
 ## Meetings / Planning
 - [ ] Prepare for meeting with Andrei (18 Dec)
