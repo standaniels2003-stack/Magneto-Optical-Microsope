@@ -14,38 +14,9 @@ I would like it to be kinda structured like this:
 Pipeline:
 ```mermaid
 flowchart TD
-    A[Raw Images] --> B[Preprocessing]
-    B --> B1[Resize / Crop]
-    B --> B2[Normalize]
-    B --> B3[Noise Removal]
-    B --> B4[Background Subtraction]
-    B --> B5[Optional Augmentation]
-
-    B --> C[CNN Processing]
-    C --> C1[Input: Grayscale Images]
-    C --> C2[Output: Segmentation Mask]
-    C2 --> C2a[Up Domains]
-    C2 --> C2b[Down Domains]
-    C2 --> C2c[Domain Walls]
-    C --> C3[Optional Outputs]
-    C3 --> C3a[Switching Probability Map]
-    C3 --> C3b[Magnetization Direction]
-    C3 --> C3c[Domain Size Statistics]
-
-    C --> D[Postprocessing]
-    D --> D1[Calculate Metrics]
-    D1 --> D1a[Average Domain Size]
-    D1 --> D1b[Domain Wall Density]
-    D1 --> D1c[Total Magnetization]
-    D --> D2[Save JSON Output]
-    D --> D3[Save Annotated Images]
-
-    D --> E[Quality Control]
-    E --> E1[Flag Low-Quality Images]
-    E --> E2[Separate Folder for Review]
-
-    E --> F[Processed & Quality-Checked Outputs]
-    F --> F1[Segmentation Masks]
-    F --> F2[JSON Metrics]
-    F --> F3[Annotated Images]
+    A[Raw Images] --> B[Preprocessing\n• Resize / Crop\n• Normalize\n• Noise Removal\n• Background Subtraction\n• Optional Augmentation]
+    B --> C[CNN Processing\n• Input: Grayscale Images\n• Output: Segmentation Mask\n  - Up / Down Domains\n  - Domain Walls\n• Optional Outputs\n  - Switching Probability\n  - Magnetization\n  - Domain Size Statistics]
+    C --> D[Postprocessing\n• Calculate Metrics\n  - Avg Domain Size\n  - Domain Wall Density\n  - Total Magnetization\n• Save JSON & Annotated Images]
+    D --> E[Quality Control\n• Flag Low-Quality Images\n• Save for Review / Discard]
+    E --> F[Final Outputs\n• Segmentation Masks\n• JSON Metrics\n• Annotated Images]
 ```
