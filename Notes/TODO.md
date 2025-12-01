@@ -27,9 +27,10 @@
 - [ ] Summarize Ciuciulkaite 2021 Coherent control of optical phonons in iron garnet films
 - [ ] Summarize Mishra 2019 Dynamic regimes of multi-shot all-optical switching in ferrimagnetic alloys
 - [ ] Summarize Savoini 2020 Spin-lattice relaxation at ultrafast timescales investigated via resonant X-ray scattering
-- [ ] Summarize Miao 2018 Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt–C Films
+- [x] Summarize Miao 2018 Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt–C Films
 - [ ] Summarize Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism
-- [ ] Summarize Avilés-Félix All-optical spin switching probability in [Tb/Co] multilayers
+- [ ] Summarize Avilés-Félix 2021 All-optical spin switching probability in [Tb/Co] multilayers
+- [ ] Summarize Wei 2016 Micromagnetics at Finite Temperature
 - [ ] Collect BibTeX entries for all read papers
 - [ ] Check whether all BibTeX entries are correct
 - [ ] Read upon what the kerr effect is
@@ -45,6 +46,9 @@
 ## Meetings / Planning
 - [ ] Prepare for meeting with Andrei (18 Dec)
 - [ ] Make the proposal for the CNN
+
+## Thesis
+- [ ] Make first draft of the final report/thesis
 
 ## Other
 - [x] Set the repository up
