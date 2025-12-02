@@ -184,7 +184,155 @@ The difference between their intensities, IA –IB,
 is due to the rotation of plane of polarization, which is induced by the magneto-optical Kerr effect.
 
 \section{Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism}
-\cite{Raposo2020_AOS_micromagnetic}
+In this article \cite{Raposo2020_AOS_micromagnetic},
+a all optical switching (AOS) experiment has been simulated.
+They investigated the Inverse Faraday Effect (IFE) and the Magnetic Circular Dichroism (MCD) as effects of the magnetic switching.
+They found that the IFE produced domain wall movements the most accurately,
+but for local inversion of the initial magnetic state no big difference has been found.\\\\
+The simulation used a micromagnetic model based on the Landau–Lifshitz–Bloch equation coupled to the heat transport.
+The temperature evolution in the system under the action of the laser pulses is described by the two Temperature Model (2TM),
+with $T_e$ the electrons temperature and $T_l$ the lattice temperature.
+So they simulated ultra short laser pulses hitting ferromagnetic thin films.
+The power of the laser s describe by:
+\begin{equation*}
+    P(r, t) = P_0 \exp\left[- \frac{r^2}{d_0^2/(4\ln(2))}\right] \exp\left[-\frac{(t-t_0)^2}{\tau_L^2/(4\ln(2))}\right]
+\end{equation*}
+With $r=\sqrt{x^2+y^2}$: the distance from the laser spot center,
+$d_0$: the Full Width at Half Maximum (FWHM) of laser spot, $\tau_L$: the FWHM of the pulse duration.
+The maximum power of the laser is:
+\begin{equation*}
+    P_0 = \frac{F}{t_{FM}\tau_L}
+\end{equation*}
+where $F$ is the laser fluence and $t_{FM}$ is the thickness of the ferromagnetic sample.
+Then as the laser heats up the sample, we use the 2TM with temperature dynamics given by:
+\begin{align*}
+C_e \frac{\partial T_e}{\partial t} &= - k_e \nabla^2 T_e - g_{el} (T_e - T_l) + \eta(\mathbf{m},\sigma) (1-R) P(\mathbf{r},t) \\
+C_l \frac{\partial T_l}{\partial t} &= - k_l \nabla^2 T_l - g_{el} (T_l - T_e) - \frac{C_l}{\tau_{\text{sub}}} (T_l - T_{\text{sub}})
+\end{align*}
+With $C_e = \gamma_e T_e$ the electron heat capacity(which is linear in $T_e$),
+$C_l$ the lattice heat capacity(which is constant above the debye temperature),
+$k_i$ the thermal conductivity, $g_{el}$ the electron-lattice coupling,
+$\mu(m, \sigma)$ the polarization- and magnetization-dependent absorption factor (MCD),
+$R$ the reflectivity and $\tau_{sub}$ the heat transfer time to the substrate.
+As the laser pulse usually heats the sample close or even over its Curie temperature $T_C$,
+the Landau–Lifshitz–Gilbert equation (LLG) cannot be used to describe the magnetization dynamics.
+Instead, the Landau–Lifshitz–Bloch (LLB) equation must be employed.
+In this case, the dynamics of the normalized magnetization is given by:
+\begin{align*}
+\frac{d\vec{m}}{dt} &= 
+- \gamma_0' \, \vec{m} \times \vec{H}_{\text{eff}}
+- \gamma_0' \frac{\alpha_\perp}{m^2} \,
+\vec{m} \times \big( \vec{m} \times (\vec{H}_{\text{eff}} + \vec{H}_{\text{th}}^{\,\perp}) \big) \nonumber\\
+&\quad + \gamma_0' \frac{\alpha_\parallel}{m^2}
+(\vec{m} \cdot \vec{H}_{\text{eff}})\, \vec{m}
++ \vec{H}_{\text{th}}^{\,\parallel}
+\end{align*}
+where the normalized magnetization is:
+\begin{equation*}
+    \vec{m}(\vec{r}, t) = \frac{\vec{M}(\vec{r, t})}{M_s^0}
+\end{equation*}
+With $M_s^0$ is the saturation magnetization at $T=0K$.
+The longitudinal and transverse damping parameters in the LLB model are given by:
+\begin{equation*}
+    \alpha_\parallel = \frac{2 \lambda T}{3 T_C m_e^2},
+    \qquad
+    \alpha_\perp     = \lambda \left( 1 - \frac{T}{3 T_C} \right),
+\end{equation*}
+with $\lambda$ the microscopic coupling to the thermal bath, $T$ the local temperature
+(from the 2TM), $T_C$ the Curie temperature and $m_e(T)$ the equilibrium magnetization.
+The effective field entering the LLB equation consists of several contributions:
+\begin{equation*}
+    \vec{H}_{\text{eff}} =
+    \vec{H}_{\text{ext}}
+    + \vec{H}_{\text{ani}}
+    + \vec{H}_{\text{ex}}
+    + \vec{H}_{\text{dem}}
+    + \vec{H}_{\text{long}},
+\end{equation*}
+where $\vec{H}_{\text{ext}}$ is the external field,
+$\vec{H}_{\text{ani}}$ the uniaxial anisotropy field,
+$\vec{H}_{\text{ex}}$ the exchange field,
+$\vec{H}_{\text{dem}}$ the demagnetizing field,
+and $\vec{H}_{\text{long}}$ the longitudinal relaxation field.
+The longitudinal field is expressed as:
+\begin{equation*}
+    \vec{H}_{\text{long}} =
+    \frac{1}{2 \chi_\parallel}
+    \left( 1 - \frac{m^2}{m_e^2(T)} \right) \vec{m},
+\end{equation*}
+with $\chi_\parallel$ the longitudinal susceptibility.
+The transverse dynamics is driven by the transverse susceptibility:
+\begin{equation*}
+    \vec{H}_{\perp} =
+    \frac{1}{\chi_\perp}
+    (\vec{m} \cdot \hat{e}_\perp) \, \hat{e}_\perp,
+\end{equation*}
+where $\chi_\perp$ is the transverse susceptibility and
+$\hat{e}_\perp$ is the local transverse direction of deviation.
+Finally, the model includes the thermal stochastic fields in longitudinal and transverse directions:
+\begin{align*}
+    \langle H_{\text{th},i}^{\,\perp}(t) \rangle &= 0, \quad
+    \langle H_{\text{th},i}^{\,\perp}(t) H_{\text{th},j}^{\,\perp}(t') \rangle =
+    \frac{2 \alpha_\perp k_B T}{\gamma_0' M_s^0 V} \delta_{ij} \delta(t-t'), \\
+    \langle H_{\text{th}}^{\,\parallel}(t) \rangle &= 0, \quad
+    \langle H_{\text{th}}^{\,\parallel}(t) H_{\text{th}}^{\,\parallel}(t') \rangle =
+    \frac{2 \alpha_\parallel k_B T}{\gamma_0' M_s^0 V} \delta(t-t'),
+\end{align*}
+with $k_B$ the Boltzmann constant and $V$ the computational cell volume.\\\\
+The optical excitation produced by the circularly polarized laser pulse introduces
+two additional mechanisms into the micromagnetic dynamics:
+the Inverse Faraday Effect (IFE) and the Magnetic Circular Dichroism (MCD).
+The IFE produces an effective magnetic field acting along the laser propagation
+direction, while the MCD modifies the local absorption depending on the
+magnetization orientation.
+The IFE field is written as:
+\begin{align*}
+\vec{B}_{\text{MO}}(\vec r, t) & = (\sigma_\pm)\,B^{\text{MO}}_0 \; f_{\text{MO}}(\vec r, t)\,\hat{u}_z, \\
+\vec{H}_{\text{MO}}(\vec r, t) & = \frac{1}{\mu_0}\,\vec{B}_{\text{MO}}(\vec r, t),
+\end{align*}
+where $\sigma_\pm = \pm 1$ denotes the laser helicity (right- or left-handed circular polarization),
+$B^{\text{MO}}_0$ the maximum optically induced magnetic flux density,
+and $f_{\text{MO}}(\vec r, t)$ a spatiotemporal envelope similar to the laser profile:
+\begin{equation*}
+f_{\text{MO}}(\vec r, t) =
+\begin{cases}
+\exp\!\Big[-\dfrac{r^2}{d_0^2/(4\ln 2)}\Big] \\[3pt]
+\times \exp\!\Big[-\dfrac{(t-t_0)^2}{\tau_L^2/(4\ln 2)}\Big],
+& t < t_0,
+\\[10pt]
+\exp\!\Big[-\dfrac{r^2}{d_0^2/(4\ln 2)}\Big] \\[3pt]
+\times \exp\!\Big[-\dfrac{(t-t_0)^2}{(\tau_L+\tau_d)^2/(4\ln 2)}\Big],
+& t \ge t_0.
+\end{cases}
+\end{equation*}
+Here $d_0$ is the laser spot FWHM, $\tau_L$ is the pulse duration FWHM,
+and $\tau_d$ accounts for a possible delay of the optically induced field decay.
+The IFE field therefore introduces a helicity-dependent torque which can move domain walls
+or contribute to magnetization reversal.
+The Magnetic Circular Dichroism (MCD) modifies the absorption of the laser power
+depending on the relative orientation between the magnetization and the light helicity.
+This is described by:
+\begin{equation*}
+\eta(\vec m, \sigma) =
+A_{\text{LP}}
+\Big[ 1 - \sigma_\pm \, m_z \, \text{MCD}(\%) \Big],
+\end{equation*}
+where $A_{\text{LP}}$ is the absorption coefficient for linearly polarized light
+and $\text{MCD}(\%)$ is the dichroism amplitude.
+The absorbed power density entering the 2TM heat equation then becomes
+$\eta(\vec m,\sigma)(1-R)P(\vec r,t)$, introducing a helicity-dependent local heating.
+Finally, both optical effects enter the Landau–Lifshitz–Bloch dynamics through the effective field:
+\begin{equation*}
+\vec{H}_{\text{eff}} =
+\vec{H}_{\text{ext}}
++ \vec{H}_{\text{ani}}
++ \vec{H}_{\text{ex}}
++ \vec{H}_{\text{dem}}
++ \vec{H}_{\text{long}}
++ \vec{H}_{\text{MO}},
+\end{equation*}
+thus ensuring that the laser–material interaction is fully included in both the thermal
+and magnetic evolution of the system.
 
 \section{All-optical spin switching probability in [Tb/Co] multilayers}
 \cite{Aviles-Felix2021_TbCo_AOS}

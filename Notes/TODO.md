@@ -28,7 +28,7 @@
 - [ ] Summarize Mishra 2019 Dynamic regimes of multi-shot all-optical switching in ferrimagnetic alloys
 - [ ] Summarize Savoini 2020 Spin-lattice relaxation at ultrafast timescales investigated via resonant X-ray scattering
 - [x] Summarize Miao 2018 Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt–C Films
-- [ ] Summarize Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism
+- [x] Summarize Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism
 - [ ] Summarize Avilés-Félix 2021 All-optical spin switching probability in [Tb/Co] multilayers
 - [ ] Summarize Wei 2016 Micromagnetics at Finite Temperature
 - [ ] Collect BibTeX entries for all read papers
