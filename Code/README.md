@@ -21,7 +21,7 @@ Code/                   # scripts, notebooks, simulatios
 
 1. **Create virtual environment:**
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    ```
 2. **Activate it:**
    ```bash

@@ -11,16 +11,18 @@ Magneto-Optical-Microsope/
 ├── Code/                       # scripts, notebooks, simulatios
 │   ├── Analysis/               # Experiment-specifieke analyses
 │   ├── Simulations/            # Theoretical or Simulation code
-│   │     ├── src/              # srs folder with all the files that contain the functions used in the simulation
-│   │     │    ├── helper.py
-│   │     │    ├── laser.py
-│   │     │    ├── materials.py
-│   │     │    ├── model_2tm.py
-│   │     │    ├── model_llb.py
-│   │     │    ├── postprocessing.py
-│   │     │    └── simulation.py
-│   │     │
-│   │     └── main.py
+│   │    ├── simulation_llg_ttm
+│   │    │    ├── src/              # srs folder with all the files that contain the functions used in the simulation
+│   │    │    │    ├── helper.py
+│   │    │    │    ├── laser.py
+│   │    │    │    ├── materials.py
+│   │    │    │    ├── model_2tm.py
+│   │    │    │    ├── model_llb.py
+│   │    │    │    ├── postprocessing.py
+│   │    │    │    └── simulation.py
+│   │    │    │
+│   │    │    └── main.py
+│   │    └── Notes.md
 │   │         
 │   ├── README.md               # Explanation of code folder structure and dependencies
 │   └── requirements.txt        # pip dependencies for venv
@@ -42,8 +44,8 @@ Magneto-Optical-Microsope/
 │   └── report.tex              # LateX file for final report
 │
 ├── Summaries/                  # all summaries of papers
-│   ├──bib/ 
-│   │   └── bibliography.bib    # Bibliography with all citations
+│   ├── bib/ 
+│   │    └── bibliography.bib    # Bibliography with all citations
 │   │
 │   ├── PDFs/                   # Important papers(for easy acces)
 │   └── papers_summaries.tex    # Summary of the papers

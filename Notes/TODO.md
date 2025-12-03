@@ -40,7 +40,7 @@
 - [ ] Learn the methods used in a experiment at FELIX
 
 ## Simulations / Code
-- [ ] Make a small basic simulation
+- [ ] Make a first simulation
 - [ ] Check posibility of making a fully automated data analysis pipeline using automated preprocessing, CNN processing and some postprocessing quality controls
 
 ## Meetings / Planning

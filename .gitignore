@@ -46,6 +46,9 @@ papers_summariesNotes.bib
 *.swp
 *.swo
 
+# Ignore generated animations
+*.mp4
+
 # -----------------------------
 # VSCode
 # -----------------------------
