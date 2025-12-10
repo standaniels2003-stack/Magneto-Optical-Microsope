@@ -11,6 +11,9 @@ is designed to integrate seamlessly with laser pulse sequences and
 material definitions, making it reusable for advanced micromagnetic 
 simulations, including studies of all-optical switching.
 
+Substrate cooling is treated via a characteristic time τ_subs, which
+represents the heat exchange between the thin film lattice and the substrate.
+
 References
 ----------
 Raposo, V., et al. (2020). Micromagnetic modeling of all-optical switching 
@@ -58,8 +61,11 @@ class TwoTemperatureModel2D:
         Surface reflectivity (dimensionless, 0-1).
     thickness : float
         Film thickness [m].
+    tau_subs : float
+        Characteristic lattice-substrate cooling time [s].
     """
 
+    #===================================================================
     def __init__(
         self, 
         material, 
@@ -67,7 +73,8 @@ class TwoTemperatureModel2D:
         grid_shape: tuple[int, int], 
         dx: float, 
         initial_Te: float = 300.0, 
-        initial_Tl: float = 300.0
+        initial_Tl: float = 300.0,
+        tau_subs: float = 0.9e-9
     ):
         """
         Initialize the 2D Two-Temperature Model solver.
@@ -87,6 +94,8 @@ class TwoTemperatureModel2D:
             Initial electron temperature [K], default is 300 K.
         initial_Tl : float, optional
             Initial lattice temperature [K], default is 300 K.
+        tau_subs : float, optional
+            Characteristic lattice-substrate cooling time [s], default 0.9 ns.
 
         Raises
         ------
@@ -100,6 +109,8 @@ class TwoTemperatureModel2D:
             raise ValueError("dx must be positive.")
         if initial_Te < 0 or initial_Tl < 0:
             raise ValueError("Initial temperatures must be non-negative.")
+        if tau_subs <= 0:
+            raise ValueError("tau_subs must be positive.")
         if material.thickness <= 0:
             raise ValueError("Material thickness must be positive.")
         if not (0 <= material.R <= 1):
@@ -109,6 +120,7 @@ class TwoTemperatureModel2D:
         self.laser_sequence = laser_sequence
         self.Nx, self.Ny = grid_shape
         self.dx = dx
+        self.tau_subs = tau_subs  # substrate cooling time
 
         # Initialize temperature fields
         self.Te = np.full((self.Nx, self.Ny), initial_Te, dtype=float)
@@ -123,7 +135,7 @@ class TwoTemperatureModel2D:
         self.thickness = material.thickness
 
     #===================================================================
-    def step(self, power_map: np.ndarray, dt: float) -> None:
+    def step(self, power_map: np.ndarray, dt: float, T_sub: float = 300) -> None:
         """
         Advance the electron and lattice temperatures by one time step.
 
@@ -134,11 +146,15 @@ class TwoTemperatureModel2D:
             Must have shape (Nx, Ny).
         dt : float
             Time step [s].
+        T_sub : float, optional
+            Substrate temperature [K], default is 300 K.
 
         Raises
         ------
         ValueError
             If power_map shape does not match grid or dt <= 0.
+        RuntimeError
+            If temperatures drop below absolute zero.
         """
         if dt <= 0:
             raise ValueError("Time step dt must be positive.")
@@ -161,8 +177,8 @@ class TwoTemperatureModel2D:
         dTe_dt = (-self.ke * lap_Te - self.G * (self.Te - self.Tl) + absorption_term) / Ce
         self.Te += dTe_dt * dt
 
-        # --- Update lattice temperature ---
-        dTl_dt = (-self.kl * lap_Tl - self.G * (self.Tl - self.Te)) / self.Cl
+        # --- Update lattice temperature with substrate cooling ---
+        dTl_dt = (-self.kl * lap_Tl - self.G * (self.Tl - self.Te) - (self.Tl - T_sub)/self.tau_subs) / self.Cl
         self.Tl += dTl_dt * dt
 
         # --- Sanity check for temperatures ---
@@ -182,3 +198,16 @@ class TwoTemperatureModel2D:
             Lattice temperature array [K].
         """
         return self.Te.copy(), self.Tl.copy()
+
+    #===================================================================
+    def total_energy(self) -> float:
+        """
+        Compute total energy density of the system [J/m^3].
+
+        Returns
+        -------
+        float
+            Sum of electron and lattice energies over the entire grid.
+        """
+        Ce = self.material.Ce(self.Te)
+        return np.sum(Ce * self.Te + self.Cl * self.Tl)

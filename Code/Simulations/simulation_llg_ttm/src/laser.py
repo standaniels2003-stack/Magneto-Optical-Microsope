@@ -320,4 +320,30 @@ class LaserSequence:
             raise TypeError("material must be an instance of FerromagneticMaterial")
     
         return sum(pulse.IFE_field(x, y, t, material) for pulse in self.pulses)
+    
+    def total_IFE_field_grid(self, X, Y, t, material, m_grid=None):
+        """
+        Vectorized calculation of the total IFE field over the entire grid.
+        Includes Magnetic Circular Dichroism (MCD) → essential for real switching!
+        Called automatically from model_llb.py
+        """
+        total = np.zeros_like(X)
+        mz_local = m_grid[..., 2] if m_grid is not None else np.ones_like(X)
+
+        for pulse in self.pulses:
+            dx = X - pulse.x0
+            dy = Y - pulse.y0
+            r2 = dx*dx + dy*dy
+            spatial = np.exp(-r2 / (pulse.d0**2 / (4 * np.log(2))))
+            temporal = np.exp(-4*np.log(2) * (t - pulse.t0)**2 / pulse.tau_L**2)
+            power = pulse.P0() * spatial * temporal
+
+            # MCD effect: absorption depends on local mz and helicity
+            absorption = material.absorption(mz_local, pulse.sigma)
+            effective_power = power * absorption
+
+            # IFE field contribution (sign from sigma)
+            total += pulse.sigma * material.chi_IFE * effective_power
+
+        return total
 #=======================================================================

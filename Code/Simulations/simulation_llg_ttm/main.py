@@ -12,6 +12,7 @@ Date:
 """
 #=======================================================================
 import os
+import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,14 +23,18 @@ from matplotlib.animation import FFMpegWriter
 from src.laser import LaserPulse, LaserSequence
 from src.materials import FerromagneticMaterial
 from src.model_ttm import TwoTemperatureModel2D
+#=======================================================================
+# --- Define constants---
+mu0 = 4*np.pi*1e-7
 
 #=======================================================================
 # --- Print current time and date ---
 now = datetime.datetime.now()
 
 # Print nicely formatted
-print("----------------------------------------------")
+print("==============================================")
 print(f"Simulation started at: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+start_time = time.time()
 
 #=======================================================================
 # --- Spatial and temporal grids ---
@@ -38,7 +43,7 @@ x = np.linspace(-100e-6, 100e-6, Nx)
 y = np.linspace(-100e-6, 100e-6, Ny)
 X, Y = np.meshgrid(x, y)
 
-t_grid = np.linspace(0, 900e-15, 900)
+t_grid = np.linspace(0, 1800e-15, 1800)
 dt = t_grid[1] - t_grid[0]
 
 #=======================================================================
@@ -46,8 +51,7 @@ dt = t_grid[1] - t_grid[0]
 print("----------------------------------------------")
 print("Initializing Material and laser sequence...")
 material = FerromagneticMaterial(
-    name="FePt", Ms0=1.1e6, Tc=750, Ku=5e6, A_ex=1e-11,
-    alpha_parallel=0.01, alpha_perp=0.02, gamma=1.76e11,
+    name="FePt", Ms0=1.1e6, Tc=750, Ku=5e6, A_ex=1e-11, gamma=1.76e11,
     thickness=10e-9, Ce_coeff=1e3, Cl=3e6, ke=10, kl=50,
     gel=1e17, R=0.3, chi_IFE=1e-23
 )
@@ -63,7 +67,7 @@ pulse_params = [
 ]
 
 for x0, y0, sigma, t0 in tqdm(pulse_params, desc="Creating laser pulses"):
-    pulses.append(LaserPulse(F=2e-6, t_TM=material.thickness, tau_L=50e-15,
+    pulses.append(LaserPulse(F=2e-8, t_TM=material.thickness, tau_L=50e-15,
                              tau_delay=20e-15, x0=x0, y0=y0, d0=50e-6, sigma=sigma, t0=t0))
 
 sequence = LaserSequence(pulses)
@@ -93,8 +97,8 @@ for xi in tqdm(x, desc="Power max computation"):
             if abs(val_IFE) > IFE_max:
                 IFE_max = abs(val_IFE)
 
-Te_min, Te_max = 300, 5000
-Tl_min, Tl_max = 300, 400
+Te_min, Te_max = 300, 800
+Tl_min, Tl_max = 300, 330
 print("Completed")
 #=======================================================================
 # --- Set up figure and axes ---
@@ -136,7 +140,7 @@ for _ in tqdm(range(1), desc="Creating map images"):
     cbar_Te = fig.colorbar(im_Te, ax=ax_Te)
     cbar_Te.set_label("K")
 
-    im_Tl = ax_Tl.imshow(np.zeros((Nx, Ny)), origin='lower', cmap='plasma',
+    im_Tl = ax_Tl.imshow(np.zeros((Nx, Ny)), origin='lower', cmap='inferno',
                          extent=[x[0]*1e6, x[-1]*1e6, y[0]*1e6, y[-1]*1e6],
                          vmin=Tl_min, vmax=Tl_max)
     ax_Tl.set_title("Lattice Temperature (K)")
@@ -188,5 +192,13 @@ with writer.saving(fig, output_path, dpi=200):
         update(i)
         writer.grab_frame()
 
+# Calculate total simulation time
+end_time = time.time()
+total_time = end_time - start_time
+hours, rem = divmod(total_time, 3600)
+minutes, seconds = divmod(rem, 60)
+
+# Print final "We are done" message
 print(f"Completed, animation saved to: {output_path}")
+print(f"Total simulation time: {int(hours)}h {int(minutes)}m {seconds:.2f}s")
 print("----------------------------------------------")

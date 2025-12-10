@@ -63,6 +63,7 @@ class FerromagneticMaterial:
         IFE susceptibility (T/(W/m^2)), must be >=0.
     """
 
+    #===================================================================
     def __init__(
         self,
         name,
@@ -70,8 +71,6 @@ class FerromagneticMaterial:
         Tc,
         Ku,
         A_ex,
-        alpha_parallel,
-        alpha_perp,
         gamma,
         thickness,
         Ce_coeff,
@@ -80,12 +79,12 @@ class FerromagneticMaterial:
         kl,
         gel,
         R,
-        chi_IFE
+        chi_IFE,
+        alpha=0.01
     ):
         if not isinstance(name, str):
             raise TypeError("name must be a string.")
-        for val, label in zip([Ms0, Tc, Ku, A_ex, alpha_parallel, alpha_perp,
-                               gamma, thickness, Ce_coeff, Cl, ke, kl, gel, R, chi_IFE],
+        for val, label in zip([Ms0, Tc, Ku, A_ex, gamma, thickness, Ce_coeff, Cl, ke, kl, gel, R, chi_IFE],
                               ["Ms0","Tc","Ku","A_ex","alpha_parallel","alpha_perp",
                                "gamma","thickness","Ce_coeff","Cl","ke","kl","gel","R","chi_IFE"]):
             if not isinstance(val, (int, float)):
@@ -95,8 +94,6 @@ class FerromagneticMaterial:
         if Tc <= 0: raise ValueError("Tc must be >0.")
         if Ku < 0: raise ValueError("Ku must be >=0.")
         if A_ex < 0: raise ValueError("A_ex must be >=0.")
-        if not 0 <= alpha_parallel <= 1: raise ValueError("alpha_parallel must be between 0 and 1.")
-        if not 0 <= alpha_perp <= 1: raise ValueError("alpha_perp must be between 0 and 1.")
         if gamma <= 0: raise ValueError("gamma must be >0.")
         if thickness <= 0: raise ValueError("thickness must be >0.")
         if Ce_coeff < 0: raise ValueError("Ce_coeff must be >=0.")
@@ -112,8 +109,6 @@ class FerromagneticMaterial:
         self.Tc = Tc
         self.Ku = Ku
         self.A_ex = A_ex
-        self.alpha_parallel = alpha_parallel
-        self.alpha_perp = alpha_perp
         self.gamma = gamma
         self.thickness = thickness
         self.Ce_coeff = Ce_coeff
@@ -123,7 +118,9 @@ class FerromagneticMaterial:
         self.gel = gel
         self.R = R
         self.chi_IFE = chi_IFE
+        self.alpha = alpha
 
+    #===================================================================
     def Ms(self, T):
         """
         Temperature-dependent saturation magnetization using mean-field model.
@@ -141,8 +138,10 @@ class FerromagneticMaterial:
         T = np.asarray(T)
         if np.any(T < 0):
             raise ValueError("Temperature T must be non-negative.")
-        return np.where(T >= self.Tc, 0.0, self.Ms0 * np.sqrt(1 - T/self.Tc))
+        arg = np.clip(1 - T/self.Tc, 0, 1)
+        return self.Ms0 * np.sqrt(arg)
 
+    #===================================================================
     def Ce(self, Te):
         """
         Electron heat capacity as a function of electron temperature.
@@ -162,29 +161,23 @@ class FerromagneticMaterial:
             raise ValueError("Electron temperature Te must be non-negative.")
         return self.Ce_coeff * Te
 
+    #===================================================================
     def absorption(self, m_local, sigma):
         """
-        Compute absorption depending on local magnetization and helicity
-        (Magnetic Circular Dichroism effect).
-
-        Parameters
-        ----------
-        m_local : float
-            Local normalized magnetization (-1 to 1).
-        sigma : int
-            Laser helicity (+1 or -1).
-
-        Returns
-        -------
-        float
-            Absorption factor (unitless, 0-1)
+        Magnetic Circular Dichroism (MCD) absorption.
+        Fully vectorized and numerically robust — accepts scalars and arrays.
         """
-        if not isinstance(m_local, (int, float)) or not -1 <= m_local <= 1:
-            raise ValueError("m_local must be between -1 and 1.")
+        m_local = np.asarray(m_local)
         if sigma not in (-1, 1):
             raise ValueError("sigma must be +1 or -1.")
-        return np.clip(1.0 - self.R + 0.05 * sigma * m_local, 0.0, 1.0)
 
+        # CRITICAL FIX: Clip m_local to [-1, 1] to avoid floating-point overflow errors
+        m_local = np.clip(m_local, -1.0, 1.0)
+
+        # Standard MCD term: 0.05 is typical from literature (can be tuned)
+        return 1.0 - self.R + 0.05 * sigma * m_local
+
+    #===================================================================
     def IFE_field(self, laser_power, m_local, sigma=1, temporal_envelope=1.0):
         """
         Compute the IFE field induced by a laser pulse.
@@ -214,7 +207,33 @@ class FerromagneticMaterial:
         if not isinstance(temporal_envelope, (int, float)) or not 0 <= temporal_envelope <= 1:
             raise ValueError("temporal_envelope must be between 0 and 1.")
         return sigma * self.chi_IFE * laser_power * temporal_envelope
+    
+    #===================================================================
+    def alpha_parallel_T(self, T):
+        T = np.asarray(T)
+        if np.any(T < 0):
+            raise ValueError("Temperature must be non-negative.")
+        alpha_par = self.alpha * ((2 * T) / (3 * self.Tc))
+        return alpha_par
+    
+    #===================================================================
+    def alpha_perp_T(self, T):
+        """
+        Temperature-scaled transverse damping α⊥(T) for LLB solver.
+        Fully vectorized.
+        """
+        T = np.asarray(T)
+        if np.any(T < 0):
+            raise ValueError("Temperature must be non-negative.")
 
+        alpha_perp = np.where(
+            T < self.Tc,
+            self.alpha * (1 - T / (3 * self.Tc)),
+            self.alpha * ((2 * T) / (3 * self.Tc))
+        )
+        return alpha_perp
+
+    #===================================================================
     def __repr__(self):
         return (f"<FerromagneticMaterial: {self.name}, Ms0={self.Ms0:.2e} A/m, "
                 f"Tc={self.Tc} K, chi_IFE={self.chi_IFE:.2e}>")

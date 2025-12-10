@@ -7,7 +7,7 @@
 - [x] Summarize Davies 2024 Phononic switching of magnetization by the ultrafast Barnett effect
 - [x] Summarize Stupakiewicz 2021 Ultrafast phononic switching of magnetization
 - [x] Summarize Beaurepaire 1996 Ultrafast Spin Dynamics in Ferromagnetic Nickel
-- [ ] Summarize Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors
+- [x] Summarize Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors
 - [ ] Summarize Bigot 2009 Coherent ultrafast magnetism induced by femtosecond laser pulses
 - [ ] Summarize Forst 2011 Nonlinear phononics as an ultrafast route to lattice control
 - [ ] Summarize Nova 2017 An effective magnetic field from optically driven lattice vibrations
