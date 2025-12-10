@@ -8,8 +8,8 @@
 - [x] Summarize Stupakiewicz 2021 Ultrafast phononic switching of magnetization
 - [x] Summarize Beaurepaire 1996 Ultrafast Spin Dynamics in Ferromagnetic Nickel
 - [x] Summarize Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors
-- [ ] Summarize Bigot 2009 Coherent ultrafast magnetism induced by femtosecond laser pulses
-- [ ] Summarize Forst 2011 Nonlinear phononics as an ultrafast route to lattice control
+- [x] Summarize Bigot 2009 Coherent ultrafast magnetism induced by femtosecond laser pulses
+- [x] Summarize Forst 2011 Nonlinear phononics as an ultrafast route to lattice control
 - [ ] Summarize Nova 2017 An effective magnetic field from optically driven lattice vibrations
 - [ ] Find free pdf version of the books in bibliography or find other way of acces
 - [ ] Skim Magnetism: From Fundamentals to Nanoscale Dynamics
