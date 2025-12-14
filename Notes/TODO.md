@@ -17,15 +17,11 @@
 - [ ] Skim Nonlinear Optics
 - [ ] Skim Magnetic Domains: The Analysis of Magnetic Microstructures
 - [ ] Skim Quantum Optics
+- [x] Summarize Stanciu 2007 All-Optical Magnetic Recording with Circularly Polarized Light
 - [ ] Summarize Kimel 2019 Nonthermal optical control of magnetism and ultrafast spintronics
-- [ ] Summarize Mishra 2021 Plasmon-enhanced ultrafast demagnetization in magnetophotonic nanostructures
-- [ ] Summarize Savoini 2018 Tracing the ultrafast magnetic response with resonant X-ray diffraction
-- [ ] Summarize Schubert 2017 Sub-cycle control of terahertz high-harmonic generation by dynamical Bloch oscillations
 - [ ] Summarize Kalashnikova 2018 Ultrafast lattice control of magnetic anisotropy in orthoferrites
 - [ ] Summarize Henighan 2016 Generation mechanism of THz-frequency coherent acoustic phonons in Fe by ultrafast optical excitation
 - [ ] Summarize Mishra 2020 Ultrafast demagnetization and spin transport in Co/Pt multilayers
-- [ ] Summarize Ciuciulkaite 2021 Coherent control of optical phonons in iron garnet films
-- [ ] Summarize Mishra 2019 Dynamic regimes of multi-shot all-optical switching in ferrimagnetic alloys
 - [ ] Summarize Savoini 2020 Spin-lattice relaxation at ultrafast timescales investigated via resonant X-ray scattering
 - [x] Summarize Miao 2018 Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt–C Films
 - [x] Summarize Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism
