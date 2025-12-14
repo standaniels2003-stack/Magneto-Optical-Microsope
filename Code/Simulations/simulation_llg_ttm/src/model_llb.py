@@ -3,124 +3,235 @@
 model_llb.py
 ------------
 
+Reduced-magnetization Landau–Lifshitz–Bloch (LLB) model
+compatible with Two-Temperature Model (TTM).
 
-References
-----------
-Raposo, V., et al. (2020). Micromagnetic modeling of all-optical switching 
-in ferromagnetic thin films: The role of inverse Faraday effect and 
-magnetic circular dichroism. Applied Sciences, 10(4), 1307.
+Based on:
+Raposo et al., Applied Sciences 10, 1307 (2020)
 
 Author: Stan Daniels
-Date:
+Rewritten with numerical stability + physical consistency
 """
 #=======================================================================
 import numpy as np
 from scipy.ndimage import laplace
-from .helper import Brillouin, Brillouin_prime
 #=======================================================================
+
 class LandauLifshitzBlochModel2D:
     """
-    2D Landau-Lifshitz-Bloch (LLB) model compatible with TTM.
+    2D reduced-magnetization LLB model.
+    Magnetization m is dimensionless (|m| ~ 1).
     """
+
     #===================================================================
     def __init__(self, material, gamma=None):
         self.material = material
-        self.Ms0 = material.Ms0
         self.Tc = material.Tc
         self.gamma = gamma if gamma is not None else material.gamma
 
-        # Physical constants
-        self.mu0 = 4*np.pi*1e-7       # Vacuum permeability (H/m)
-        self.muB = 9.274e-24          # Bohr magneton (J/T)
-        self.kB = 1.381e-23           # Boltzmann constant (J/K)
+        self.mu0 = 4*np.pi*1e-7  # H/m
 
     #===================================================================
     @staticmethod
-    def Me_equilibrium(T, Tc, Ms0, beta=0.33):
+    def m_equilibrium(T, Tc, beta=0.33):
         """
-        Temperature-dependent equilibrium magnetization.
-        Vectorized for arrays.
+        Reduced equilibrium magnetization m_e(T).
         """
         T = np.asarray(T)
-        return Ms0 * np.clip(1 - T / Tc, 0, 1)**beta
-
+        return np.clip(1 - T / Tc, 0.0, 1.0)**beta
+    
     #===================================================================
-    def H_effective(self, m_grid, Te_map, H_ext=None, dx=1.0, laser_sequence=None, t=0.0, X=None, Y=None):
-        """
-        Compute the total effective field H_eff (vectorized) for the entire grid.
-        """
-        Nx, Ny, _ = m_grid.shape
+    @staticmethod
+    def brillouin_prime(x, S=1/2):
+        # For S = 1/2, B(x) = tanh(x)
+        return 1.0 / np.cosh(x)**2
+    
+    #===================================================================
+    def chi_parallel(self, Te):
+        kB = 1.380649e-23
+        muB = 9.274e-24
 
-        # External field
-        H_ext_array = np.zeros((Nx, Ny, 3)) if H_ext is None else np.broadcast_to(H_ext, (Nx, Ny, 3))
+        m_e = self.m_equilibrium(Te, self.Tc)
+        m_e = np.clip(m_e, 1e-6, None)
 
-        # --- Exchange Field ---
-        H_exch = np.stack([
-            laplace(m_grid[:,:,0], mode='reflect') / dx**2,
-            laplace(m_grid[:,:,1], mode='reflect') / dx**2,
-            laplace(m_grid[:,:,2], mode='reflect') / dx**2
-        ], axis=-1)
-        H_exch *= 2 * self.material.A_ex / (self.mu0 * self.Ms0**2)
+        x = (self.Tc / Te) * m_e
+        Bp = self.brillouin_prime(x)
 
-        # --- Anisotropy Field (uniaxial along z) ---
-        ez = np.array([0,0,1])
-        m_dot_ez = m_grid[..., 2]
-        H_ani = (2 * self.material.Ku / self.Ms0**2) * m_dot_ez[..., None] * ez
-
-        # --- Longitudinal relaxation field ---
-        Me = self.Me_equilibrium(Te_map, self.Tc, self.Ms0)[..., None]
-        x = self.Tc * Me[..., 0] / Te_map
-        m_mag = np.linalg.norm(m_grid, axis=-1)
-        m_mag = np.clip(m_mag, 1e-18, None)
-        eps = 1e-18
-        B_prime_safe = np.clip(Brillouin_prime(x), eps, None)
-
-        chi_par =  (self.mu0 * self.muB / (self.kB * Te_map) * B_prime_safe) / (1 - self.Tc ** B_prime_safe / Te_map)
-
-        factor = np.where(
-            Te_map < self.Tc,
-            1 / (2 * chi_par) * (1 - m_mag**2 / (Me[..., 0]**2)),
-            -1 / chi_par * (1 + (3 * self.Tc * m_mag**2) / ( 5 * (Te_map - self.Tc)))
+        chi = (
+            self.mu0 * muB / (kB * Te)
+            * Bp / np.maximum(1 - (self.Tc / Te) * Bp, 1e-6)
         )
 
-        # Apply factor to magnetization vector
-        H_m = factor[..., None] * m_grid
-        
+        return chi
 
-        # --- IFE Field ---
-        H_IFE = np.zeros_like(m_grid)
+    #================= Field components ================================
+    # ---------------- External Field ----------------
+    def H_external(self, m, H_ext=None):
+        Nx, Ny, _ = m.shape
+        if H_ext is None:
+            H_ext = np.zeros((Nx, Ny, 3))
+        else:
+            H_ext = np.broadcast_to(H_ext, (Nx, Ny, 3))
+        return H_ext
+
+    # ---------------- Exchange Field ----------------
+    def H_exchange(self, m, dx=1.0):
+        H_ex = np.stack([
+            laplace(m[:,:,0], mode="reflect"),
+            laplace(m[:,:,1], mode="reflect"),
+            laplace(m[:,:,2], mode="reflect")
+        ], axis=-1)
+        H_ex *= 2 * self.material.A_ex / (self.mu0 * self.material.Ms0 * dx**2)
+        return H_ex
+
+    # ---------------- anisotropy Field ----------------
+    def H_anisotropy(self, m, Te, n=2):
+        ez = np.array([0.0, 0.0, 1.0])
+
+        m_e = self.m_equilibrium(Te, self.Tc)
+        m_e = np.clip(m_e, 1e-6, None)
+
+        Ku_T = self.material.Ku * m_e**n
+
+        H_an = (
+            2 * Ku_T[..., None]
+            / self.material.Ms0
+        ) * m[..., 2, None] * ez * self.mu0
+
+        return H_an
+
+
+    # ---------------- Inverse Faraday Effect Field ----------------
+    def H_IFE(self, m, laser_sequence=None, t=0.0, X=None, Y=None):
+        H_IFE = np.zeros_like(m)
         if laser_sequence is not None and X is not None and Y is not None:
-            H_IFE[..., 2] = laser_sequence.total_IFE_field_grid(X, Y, t, self.material, m_grid)
+            H_IFE[...,2] = laser_sequence.total_IFE_field_grid(X, Y, t, self.material)
+        return H_IFE
 
-        # --- Total H_eff ---
-        H_eff = H_ext_array + H_exch + H_ani + H_IFE + H_m
-        return H_eff
+    # ---------------- Demagnetization Field ----------------
+    def H_demag(self, m):
+        """
+        Compute the demagnetization field using a simple finite-difference approximation
+        for a thin film (Nx, Ny, 3).
+        Note: For more accuracy, FFT-based convolution with the demag tensor is recommended.
+        """
+        # Assuming uniform thickness along z and free boundary conditions
+        m_xx = laplace(m[...,0], mode="reflect")
+        m_yy = laplace(m[...,1], mode="reflect")
+        m_zz = laplace(m[...,2], mode="reflect")
+
+        # Simple isotropic approximation
+        H_demag = - (m_xx[...,None] + m_yy[...,None] + m_zz[...,None]) * m
+        return H_demag
+
+    # ---------------- Longitudal Relaxation Field ----------------
+    def H_longitudinal(self, m, Te):
+        m_mag = np.linalg.norm(m, axis=-1)
+        m_mag = np.clip(m_mag, 1e-12, None)
+
+        m_e = self.m_equilibrium(Te, self.Tc)
+        m_e = np.clip(m_e, 1e-6, None)
+
+        chi = self.chi_parallel(Te)
+        chi = np.clip(chi, 1e-6, None)
+
+        Hm = np.zeros_like(m)
+
+        below = Te < self.Tc
+        above = ~below
+
+        # T < Tc
+        Hm[below] = (
+            1.0 / (2 * chi[below])[..., None]
+            * (1.0 - (m_mag[below]**2) / (m_e[below]**2))[..., None]
+            * m[below]
+        )
+
+        # T > Tc
+        Hm[above] = (
+            -1.0 / chi[above][..., None]
+            * (1.0 + (3*self.Tc / (5*(Te[above]-self.Tc))) * m_mag[above]**2)[..., None]
+            * m[above]
+        )
+
+        return Hm
 
     #===================================================================
-    def step_grid(self, m_grid, Te_map, dt, dx=1.0, H_ext=None, laser_sequence=None, t=None, X = None, Y = None):
+    def H_effective(self, m, Te, dx=1.0, H_ext=None, laser_sequence=None, t=0.0, X=None, Y=None):
         """
-        Perform a single LLB time step on the entire 2D magnetization grid.
-        Vectorized implementation.
+        Total effective field as sum of components.
         """
-        H_eff = self.H_effective(m_grid, Te_map, H_ext=H_ext, dx=dx, laser_sequence=laser_sequence, t=t, X=X, Y=Y)
-        alpha_par = np.clip(self.material.alpha_parallel_T(Te_map)[..., None], 0, 1)
-        alpha_perp = np.clip(self.material.alpha_perp_T(Te_map)[..., None], 0, 1)
-        gamma_prime = self.gamma / (1 + alpha_perp**2)
+        H_ext_field = self.H_external(m, H_ext)
+        H_ex_field = self.H_exchange(m, dx)
+        H_an_field = self.H_anisotropy(m, Te)
+        H_IFE_field = self.H_IFE(m, laser_sequence, t, X, Y)
+        H_demag_field = self.H_demag(m)
+        #H_long_field = self.H_longitudinal(m, Te)
 
-        m_norm = np.linalg.norm(m_grid, axis=-1) + 1e-18
+        H_eff = H_ext_field + H_ex_field + H_an_field + H_IFE_field+ H_demag_field # + H_long_field 
+        return H_eff
+  
+    #===================================================================
+    def step_grid(
+        self,
+        m,
+        Te,
+        dt,
+        dx=1.0,
+        H_ext=None,
+        laser_sequence=None,
+        t=0.0,
+        X=None,
+        Y=None
+    ):
+        """
+        Single explicit Euler LLB step.
+        """
 
-        # LLB update (Euler step)
-        m_cross_H = np.cross(m_grid, H_eff)
-        m_cross_m_cross_H = np.cross(m_grid, m_cross_H)
-        m_dot_H = np.sum(m_grid * H_eff, axis=-1)
-        print(m_grid.shape)
-        print(H_eff.shape)
-        Me = self.Me_equilibrium(Te_map, self.Tc, self.Ms0, beta=0.36)[..., None]
-        dm_dt = -gamma_prime * m_cross_H \
-                - gamma_prime * alpha_perp * m_cross_m_cross_H / m_norm[:,:,None]**2 \
-                + gamma_prime * alpha_par * m_dot_H / m_norm[:,:,None]**2
+        H = self.H_effective(
+            m, Te, dx=dx,
+            H_ext=H_ext,
+            laser_sequence=laser_sequence,
+            t=t, X=X, Y=Y
+        )
 
-        m_new = m_grid + dm_dt * dt
+        alpha_par = np.clip(
+            self.material.alpha_parallel_T(Te), 0.0, 1.0
+        )[...,None]
+
+        alpha_perp = np.clip(
+            self.material.alpha_perp_T(Te), 0.0, 1.0
+        )[...,None]
+
+        gamma_eff = self.gamma / (1 + alpha_perp**2)
+
+        m_norm = np.linalg.norm(m, axis=-1, keepdims=True)
+        m_norm = np.clip(m_norm, 1e-12, None)
+
+        # ---------------- LLB equation ----------------
+        m_cross_H = np.cross(m, H)
+        m_cross_m_cross_H = np.cross(m, m_cross_H)
+        m_dot_H = np.sum(m * self.H_longitudinal(m, Te), axis=2)
+        
+        m_e = self.m_equilibrium(Te, self.Tc)[..., None]
+        m_e = np.clip(m_e, 1e-6, None)
+
+        dm_dt = (
+            - gamma_eff * m_cross_H
+            - gamma_eff * alpha_perp * m_cross_m_cross_H / m_norm**2
+            + gamma_eff * alpha_par * m_dot_H[..., None] * m / m_norm**2
+        )
+
+        # ---------------- Euler update ----------------
+        m_new = m + dt * dm_dt
+
+        # ---------------- Safety limiter ----------------
+        m_mag = np.linalg.norm(m_new, axis=-1, keepdims=True)
+        m_new = np.where(
+            m_mag > 2.0,
+            2.0 * m_new / m_mag,
+            m_new
+        )
 
         return np.nan_to_num(m_new)
 #=======================================================================

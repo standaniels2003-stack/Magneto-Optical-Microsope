@@ -51,19 +51,9 @@ material = FerromagneticMaterial(
 )
 
 pulse_params = [
-    (0e-6, 0e-6, -1, 100e-15),
-    (0e-6, 0e-6, -1, 400e-15),
-    (0e-6, 0e-6, -1, 800e-15),
-    (0e-6, 0e-6, -1, 1200e-15),
-    (0e-6, 0e-6, -1, 1600e-15),
-    (0e-6, 0e-6, -1, 2000e-15),
-    (0e-6, 0e-6, -1, 2400e-15),
-    (0e-6, 0e-6, -1, 2800e-15),
-    (0e-6, 0e-6, -1, 3200e-15),
-    (0e-6, 0e-6, -1, 3600e-15),
-    (0e-6, 0e-6, -1, 4000e-15),
+    (0e-6, 0e-6, -1, 200e-15)
 ]
-pulses = [LaserPulse(F=2e-8, t_TM=material.thickness, tau_L=200e-15,
+pulses = [LaserPulse(F=8e-8, t_TM=material.thickness, tau_L=100e-15,
                       tau_delay=50e-15, x0=x0, y0=y0, d0=50e-6, sigma=sigma, t0=t0)
           for x0, y0, sigma, t0 in pulse_params]
 sequence = LaserSequence(pulses)
@@ -75,7 +65,7 @@ print("Initializing TTM and LLB solvers...")
 ttm = TwoTemperatureModel2D(material, sequence, grid_shape=(Nx, Ny), dx=x[1]-x[0])
 llb_solver = LandauLifshitzBlochModel2D(material)
 m_grid = np.zeros((Nx, Ny, 3))
-m_grid[:, :, 2] = material.Ms0
+m_grid[:, :, 2] = 1.0
 print("Initial magnetization set along +z.")
 
 #=======================================================================
@@ -90,7 +80,7 @@ for t_val in tqdm(t_grid, desc="Precomputing"):
     # Simple test grid for H_eff (spins along +z)
     m_test = np.zeros((Nx, Ny, 3))
     m_test[:, :, 2] = 1.0
-    H_eff_grid = llb_solver.H_effective(m_test, Te_map=np.full((Nx,Ny), 300), t=t_val, laser_sequence=sequence)
+    H_eff_grid = llb_solver.H_effective(m_test, Te=np.full((Nx,Ny), 300), t=t_val, laser_sequence=sequence)
     Hmax = max(Hmax, np.max(np.linalg.norm(H_eff_grid, axis=-1)))
 
 #=======================================================================
@@ -110,7 +100,7 @@ def setup_imshow(ax, title, vmin, vmax, cmap="inferno"):
 
 im_power = setup_imshow(ax_power, "Laser Power (W/m^2)", 0, power_max, cmap="hot")
 im_Heff = setup_imshow(ax_Heff, "|H_eff| (T)", 0, Hmax, cmap="coolwarm")
-im_mz = setup_imshow(ax_mz, "Magnetization mz", -material.Ms0, material.Ms0, cmap="bwr")
+im_mz = setup_imshow(ax_mz, "Magnetization mz", -1.0, 1.0, cmap="bwr")
 im_Te = setup_imshow(ax_Te, "Electron Temp (K)", 300, 800, cmap="inferno")
 im_Tl = setup_imshow(ax_Tl, "Lattice Temp (K)", 300, 330, cmap="inferno")
 plt.tight_layout()
@@ -156,8 +146,28 @@ def update(frame):
 
     # Periodic console log
     if frame % 50 == 0 or frame == len(t_grid)-1:
-        tqdm.write(f"t = {t_val*1e15:.0f} fs, max mz = {np.max(m_grid[:,:,2]):.3f}, min mz = {np.min(m_grid[:,:,2]):.3f}")
-        tqdm.write(f"t = {t_fs:.0f} fs, Te_max = {np.max(Te_map):.0f} K, H_IFE_min = {np.min(H_IFE_map):.2e} T")
+        H_ext_map = llb_solver.H_external(m_grid)
+        H_ex_map = llb_solver.H_exchange(m_grid, dx=x[1]-x[0])
+        H_an_map = llb_solver.H_anisotropy(m_grid, Te_map)
+        H_IFE_map = llb_solver.H_IFE(m_grid, laser_sequence=sequence, t=t_val, X=XX, Y=YY)
+        H_demag_map = llb_solver.H_demag(m_grid)
+        H_long_map = llb_solver.H_longitudinal(m_grid, Te_map)
+
+        # Max/min of each component for easy logging
+        def log_H(name, H):
+            mag = np.linalg.norm(H, axis=-1)
+            tqdm.write(f"{name}: max = {np.max(mag):.3e} T, min = {np.min(mag):.3e} T")
+
+        tqdm.write(f"\n=== t = {t_fs:.0f} fs ===")
+        tqdm.write(f"mz: max = {np.max(m_grid[:,:,2]):.3f}, min = {np.min(m_grid[:,:,2]):.3f}")
+        tqdm.write(f"Te_max = {np.max(Te_map):.0f} K")
+        log_H("H_ext", H_ext_map)
+        log_H("H_ex", H_ex_map)
+        log_H("H_an", H_an_map)
+        log_H("H_IFE", H_IFE_map)
+        log_H("H_demag", H_demag_map)
+        log_H("H_long", H_long_map)
+        log_H("H_eff", H_eff_map)
 
     return im_power, im_Heff, im_mz, im_Te, im_Tl
 

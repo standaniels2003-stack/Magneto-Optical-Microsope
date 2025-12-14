@@ -12,3 +12,6 @@ Attempt at adding the Landau-Lifshitz-Bloch (LLB) model to allow for actual swit
 
 **Sat Dec 6:**
 Tried to fix the model_llb solver but i think i just made things worse. I might need to just delete it and redo everything properly this time. I don't know why suddenly the simulation goes crazy but it is annoying me. Volgende keer alle onderdelen van H_effective controleren en kijken welke de problemen veroorzaakt, ik ben bijna zeker dat het H_m is maar ik wil het zeker weten.
+
+**Sun Dec 14:**
+Changed the model_llb.py to allow for easy extraction of the H effective components, by having sepperate functions for all. Now it is time to debug and try to make everything correct. I still get weird results for H_eff even without using H_long (or H_m) in it so i have to look into what it is and why. I need to find the exact formulas for everything and then i might need to change the simulation code to allow for better usaged, or maybe i need to use way smaller time steps. It is starting to get annoying tho, it was very nice that the temperature model worked easily but the other model is very annoying and time consuming.
