@@ -30,7 +30,35 @@
 %=============================================================
 
 \section{Kirilyuk 2010 Ultrafast optical manipulation of magnetic order}
-\cite{Kirilyuk2010}
+This paper \cite{Kirilyuk2010} is a revieuw paper,
+that summarizes progress in the field of laser manipulation of magnetic order.
+This field is of great importance as memory writing speed lacks behind other techonologies,
+thus creating a technological bottleneck. Therefore ultrafast femtosecond magnetic memory is important research.\\\\
+\subsection{Introduction}
+In magnetic storage devices,
+the tradiginal zero's and one's are represented by pointing the magnetization vector of certain domains either up or down.
+Traditionally such switching of the magnetic domains has been done by applying an external magnetic field,
+but there appears to be a speed limit to this as explored by experiments in the Stanford Linear Accelerator\cite{Tudosa2004_UltimateSpeed}.
+Thus as the traditional methods were to slow, new methods got invented by using laser pulses.
+One of the first was a demagnetization by a $60fs$ laserpulse\cite{Beaurepaire1996}.\\\\
+The effect a pump laser pulse has on magnetization can be catogarized in different types.
+The first one being thermal effects, this occurs because the mdium hit by the pump laser absorbs the photons and thus heats up.
+The change in the magnetization corresponds to that of spin temperature.
+There is no direct photon-spin coupling, so first the electron and phonon systems gets energized,
+and then this energy gets transferred to the spin system.
+In itinerant ferromagnets this can occur in $50fs$, while in dielectrics this can take up to nanoseconds.
+The lifetime of such thermal effects is given by external parameters,
+such as thermal conductivity of a substrate as well as the geometry of the sample.\\
+The second effect Nonthermal (photomagnetic) effects involving the absorption of pump photons.
+In this case the photons are absorbed via certain electronic states that have a direct influence on magnetic parameters.
+These changes are instatanious, so they occur as fast as the rise time of the pump lasser.
+The change in parameters cause a change in magnetic moments.\\
+And finally, there are nonthermal optomagnetic effects that do not require the absorption of pump photons,
+but are based on an optically coherent stimulated Raman scattering mechanism.
+Raman scattering is an inelastic, coherent light-scattering process that can transfer energy and angular momentum between photons and internal excitations (such as spins),
+enabling ultrafast, nonthermal control of magnetization without photon absorption.
+\subsection{Theoretical considerations}
+.
 
 \section{Gidding 2023 Dynamic self-organisation and pattern formation by magnon-polarons}
 In this article \cite{Gidding2023},
@@ -94,6 +122,9 @@ The information about the spin dynamics is contained in the time evolution of th
 hysteresis loop basically means that the output depends on the history of the input.\\\\
 This work basically showed that using optical and magnetooptical techniques cann be used to measure extremely fast events.
 The experiment showed that for the first few picoseconds the dynamics of spin and electron temperatures are different.
+
+\section{Tudosa 2004 The ultimate speed of magnetic switching in granular recording media}
+\cite{Tudosa2004_UltimateSpeed}
 
 \section{Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors}
 In this article \cite{Kimel2005},
@@ -225,7 +256,7 @@ Laser pulses of $40 fs$ can already switch magenitization.
 % SIMULATION-ORIENTED PAPERS: Laser-induced magnetization dynamics / micromagnetics / all-optical switching
 %=============================================================
 
-\section{Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt–C Films}
+\section{Miao 2018 Micromagnetic Studies of Laser-Induced Magnetization Dynamics in FePt-C Films}
 In this article \cite{Miao2018_FePtC_laser},
 they have simulated laser-induced magnetization dynamics using a hybrid Monte Carlo micromagnetic method.
 The results show that the magnetization dynamics includes an ultrafast demagnetization,
@@ -237,16 +268,16 @@ This shows that hybrid Monte carlo micromagnetic simulations are a good way to g
 They have used ime-resolved magneto-optical Kerr effect (TR-MOKE) to derive the spin temperature profile directly.
 In the TR-MOKE measurement, a pump pulse excites the sample,
 and then the reflected probe beam is split into two orthogonal polarized components, denoted by signal A and signal B.
-The difference between their intensities, IA –IB,
+The difference between their intensities, IA -IB,
 is due to the rotation of plane of polarization, which is induced by the magneto-optical Kerr effect.
 
-\section{Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism}
+\section{Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism}
 In this article \cite{Raposo2020_AOS_micromagnetic},
 a all optical switching (AOS) experiment has been simulated.
 They investigated the Inverse Faraday Effect (IFE) and the Magnetic Circular Dichroism (MCD) as effects of the magnetic switching.
 They found that the IFE produced domain wall movements the most accurately,
 but for local inversion of the initial magnetic state no big difference has been found.\\\\
-The simulation used a micromagnetic model based on the Landau–Lifshitz–Bloch equation coupled to the heat transport.
+The simulation used a micromagnetic model based on the Landau-Lifshitz-Bloch equation coupled to the heat transport.
 The temperature evolution in the system under the action of the laser pulses is described by the two Temperature Model (2TM),
 with $T_e$ the electrons temperature and $T_l$ the lattice temperature.
 So they simulated ultra short laser pulses hitting ferromagnetic thin films.
@@ -272,8 +303,8 @@ $k_i$ the thermal conductivity, $g_{el}$ the electron-lattice coupling,
 $\mu(m, \sigma)$ the polarization- and magnetization-dependent absorption factor (MCD),
 $R$ the reflectivity and $\tau_{sub}$ the heat transfer time to the substrate.
 As the laser pulse usually heats the sample close or even over its Curie temperature $T_C$,
-the Landau–Lifshitz–Gilbert equation (LLG) cannot be used to describe the magnetization dynamics.
-Instead, the Landau–Lifshitz–Bloch (LLB) equation must be employed.
+the Landau-Lifshitz-Gilbert equation (LLG) cannot be used to describe the magnetization dynamics.
+Instead, the Landau-Lifshitz-Bloch (LLB) equation must be employed.
 In this case, the dynamics of the normalized magnetization is given by:
 \begin{align*}
 \frac{d\vec{m}}{dt} &= 
@@ -378,7 +409,7 @@ where $A_{\text{LP}}$ is the absorption coefficient for linearly polarized light
 and $\text{MCD}(\%)$ is the dichroism amplitude.
 The absorbed power density entering the 2TM heat equation then becomes
 $\eta(\vec m,\sigma)(1-R)P(\vec r,t)$, introducing a helicity-dependent local heating.
-Finally, both optical effects enter the Landau–Lifshitz–Bloch dynamics through the effective field:
+Finally, both optical effects enter the Landau-Lifshitz-Bloch dynamics through the effective field:
 \begin{equation*}
 \vec{H}_{\text{eff}} =
 \vec{H}_{\text{ext}}
@@ -388,16 +419,22 @@ Finally, both optical effects enter the Landau–Lifshitz–Bloch dynamics throu
 + \vec{H}_{\text{long}}
 + \vec{H}_{\text{MO}},
 \end{equation*}
-thus ensuring that the laser–material interaction is fully included in both the thermal
+thus ensuring that the laser-material interaction is fully included in both the thermal
 and magnetic evolution of the system.
 
-\section{All-optical spin switching probability in [Tb/Co] multilayers}
+\section{Aviles-Felix 2021 All-optical spin switching probability in [Tb/Co] multilayers}
 \cite{Aviles-Felix2021_TbCo_AOS}
 
-\section{Micromagnetics at Finite Temperature}
+\section{Wei 20216 Micromagnetics at Finite Temperature}
 This article \cite{Wei20216},
 shows the development of hybrid Monte carlo (HMC) micromagnetic simulations.
 The HMC micromagnetics is a self-consistent method for the magnetic studies at finite temperature.
+
+\section{Kazantseva 2008 Slow recovery of the magnetisation after a sub-picosecond heat pulse}
+\cite{Kazantseva_2008}
+
+\section{Atxitia 2009 Ultrafast Spin Dynamics: The Effect of Colored Noise}
+\cite{Atxitia2009}
 
 \bibliographystyle{apsrev4-2}
 \bibliography{bib/bibliography}

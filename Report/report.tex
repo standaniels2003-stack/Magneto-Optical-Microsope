@@ -1,0 +1,70 @@
+\documentclass[reprint,amsmath,amssymb,aps]{revtex4-2}
+
+% ===================================================================
+% ---------- Packages ----------
+% ===================================================================
+
+\usepackage{graphicx}          % figures
+\usepackage{tikz}              % TikZ drawings
+\usepackage{pgfplots}          % plots with pgfplots
+\pgfplotsset{compat=1.18}      % current pgfplots version
+
+\usepackage{booktabs}          % nice tables (\toprule, \midrule, etc.)
+\usepackage{hyperref}          % hyperlinks + cross-references
+\usepackage{caption}           % better caption control
+\usepackage{algorithm}         % floating algorithm environment
+\usepackage{algpseudocode}     % pseudocode
+\usepackage{float}
+
+\usepackage{microtype}         % improves typography (highly recommended with REVTeX)
+
+\begin{document}
+\raggedbottom
+
+% ===================================================================
+% ---------- Title ----------
+% ===================================================================
+\title{Thesis}
+
+\author{Stan Daniels}
+\affiliation{Radboud University Nijmegen\\FELIX Laboratory}
+
+\date{\today}
+
+% ===================================================================
+% ---------- Abstract ----------
+% ===================================================================
+\begin{abstract}
+    Abstract:\\
+    Purpose: Summarizes your entire report in 150–250 words.\\
+    Content:
+    \begin{itemize}
+        \item Motivation and context of the experiment
+        \item Clear statement of the objective
+        \item Brief description of methods or experimental approach
+        \item Key results (numbers, trends, or qualitative findings)
+        \item Main conclusion
+    \end{itemize}
+    Tips: Write it last. Keep it concise, readable, and avoid citations.
+\end{abstract}
+
+\maketitle
+
+% ===================================================================
+% ---------- Sections ----------
+% ===================================================================
+\input{Sections/introduction.tex}
+\input{sections/theory.tex}
+\input{sections/methods.tex}
+\input{sections/results.tex}
+\input{sections/discussion.tex}
+\input{sections/conclusion.tex}
+\input{sections/acknowledgements.tex}
+
+% ===================================================================
+% ---------- Bibliography ----------
+% ===================================================================
+\bibliographystyle{apsrev4-2}
+\bibliography{bib/bibliography}
+
+\end{document}

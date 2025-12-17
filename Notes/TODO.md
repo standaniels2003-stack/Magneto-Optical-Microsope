@@ -7,6 +7,7 @@
 - [x] Summarize Davies 2024 Phononic switching of magnetization by the ultrafast Barnett effect
 - [x] Summarize Stupakiewicz 2021 Ultrafast phononic switching of magnetization
 - [x] Summarize Beaurepaire 1996 Ultrafast Spin Dynamics in Ferromagnetic Nickel
+- [ ] Summarize Tudosa 2004 The ultimate speed of magnetic switching in granular recording media
 - [x] Summarize Kimel 2005 Non-thermal optical control of magnetization in ferromagnetic semiconductors
 - [x] Summarize Bigot 2009 Coherent ultrafast magnetism induced by femtosecond laser pulses
 - [x] Summarize Forst 2011 Nonlinear phononics as an ultrafast route to lattice control
@@ -27,6 +28,8 @@
 - [x] Summarize Raposo 2020 Micromagnetic Modeling of All Optical Switching of Ferromagnetic Thin Films: The Role of Inverse Faraday Effect and Magnetic Circular Dichroism
 - [ ] Summarize Avilés-Félix 2021 All-optical spin switching probability in [Tb/Co] multilayers
 - [ ] Summarize Wei 2016 Micromagnetics at Finite Temperature
+- [ ] Summarize Kazantseva 2007 low recovery of the magnetisation after a sub-picosecond heat pulse
+- [ ] Summarize Atxitia 2009 Ultrafast Spin Dynamics: The Effect of Colored Noise
 - [ ] Collect BibTeX entries for all read papers
 - [ ] Check whether all BibTeX entries are correct
 - [ ] Read upon what the kerr effect is
@@ -37,6 +40,7 @@
 
 ## Simulations / Code
 - [ ] Make a first simulation
+- [ ] In Kirilyuk 2010 Ultrafast optical manipulation of magnetic order, there are a few citations to modeling techniques, use these to try to make a actually working simulation
 - [ ] Check posibility of making a fully automated data analysis pipeline using automated preprocessing, CNN processing and some postprocessing quality controls
 
 ## Meetings / Planning
@@ -44,7 +48,10 @@
 - [ ] Make the proposal for the CNN
 
 ## Thesis
+- [x] Make outline of thesis
+- [ ] Expand upon requirements/expectations in the thesis
 - [ ] Make first draft of the final report/thesis
+- [ ] Go through Kirilyuk 2010 Ultrafast optical manipulation of magnetic order, and find usefull and relevant citations
 
 ## Other
 - [x] Set the repository up
